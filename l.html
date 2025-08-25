@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Glow & Scent | Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Open+Sans&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #7b5e57;
+      --accent: #3b2f2f;
+      --glass: rgba(255, 255, 255, 0.3);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(135deg, #ffe3d3, #ffe6f0, #f4e8dc);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .bg-glow {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, #ffdac1, #ffffff00);
+      top: -150px;
+      right: -150px;
+      filter: blur(100px);
+      opacity: 0.5;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      background: var(--glass);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 420px;
+      padding: 2.5rem;
+      z-index: 1;
+      animation: fadeIn 1s ease-out forwards;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.3rem;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 0.85rem;
+      margin-top: 0.7rem;
+      border-radius: 12px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    input {
+      background: rgba(255,255,255,0.85);
+      outline: none;
+      transition: box-shadow 0.2s ease;
+    }
+
+    input:focus {
+      box-shadow: 0 0 0 3px rgba(123, 94, 87, 0.3);
+    }
+
+    .card button[type="submit"] {
+      background: var(--primary);
+      color: white;
+      font-weight: bold;
+      margin-top: 1.2rem;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .card button[type="submit"]:hover {
+      background: #5e443e;
+      transform: translateY(-1px);
+    }
+
+    .divider {
+      text-align: center;
+      color: #666;
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      width: 40%;
+      height: 1px;
+      background: #bbb;
+      top: 50%;
+    }
+
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    .auth-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    .auth-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #444;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .auth-btn img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .auth-btn:hover {
+      background-color: #f5f5f5;
+      transform: translateY(-1px);
+    }
+
+    .auth-btn span {
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .toggle-text {
+      text-align: center;
+      margin-top: 1rem;
+      color: var(--accent);
+      font-size: 0.95rem;
+    }
+
+    .toggle-text a {
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .bottom-sheet {
+      position: fixed;
+      bottom: -100%;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+      transition: bottom 0.4s ease-in-out;
+      z-index: 999;
+      padding: 1.5rem;
+    }
+
+    .bottom-sheet.active { bottom: 0; }
+
+    .sheet-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      z-index: 998;
+      display: none;
+    }
+
+    .backdrop.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .card { padding: 2rem 1.5rem; }
+      h2 { font-size: 1.8rem; }
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 1.5rem 1rem; border-radius: 16px; }
+      h2 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+
+  <div class="card">
+    <h2 id="formTitle">Login to Glow & Scent</h2>
+    <form id="form">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="divider">or</div>
+
+    <div class="auth-buttons">
+      <button class="auth-btn" onclick="googleSignIn()">
+        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" />
+        <span>Sign in with Google</span>
+      </button>
+
+      <button class="auth-btn" onclick="facebookSignIn()">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" alt="Facebook" />
+        <span>Sign in with Facebook</span>
+      </button>
+
+      <button class="auth-btn" onclick="showPhoneInput()">
+        <img src="https://img.icons8.com/ios-filled/50/phone--v1.png" alt="Phone" />
+        <span>Sign in with Mobile</span>
+      </button>
+    </div>
+
+    <div class="toggle-text">
+      Don’t have an account? <a onclick="toggleForm()">Sign up</a>
+    </div>
+  </div>
+
+  <!-- Bottom Sheet for Phone -->
+  <div id="phoneSheet" class="bottom-sheet">
+    <div class="sheet-content">
+      <h3>Sign in with Mobile</h3>
+      <input type="tel" id="phoneNumber" placeholder="Enter mobile number" required />
+      <div id="recaptcha-container"></div>
+      <button onclick="sendOTP()">Send OTP</button>
+      <input type="text" id="otp" placeholder="Enter OTP" />
+      <button onclick="verifyOTP()">Verify OTP</button>
+    </div>
+  </div>
+  <div id="backdrop" class="backdrop" onclick="closeSheet()"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAYlz1zWNhr1DflppMfzNPva0UFVso7Bpk",
+      authDomain: "candle-d7f07.firebaseapp.com",
+      projectId: "candle-d7f07",
+      storageBucket: "candle-d7f07.appspot.com",
+      messagingSenderId: "165415078791",
+      appId: "1:165415078791:web:c764eb95f3d2272c1ce122"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const form = document.getElementById('form');
+    const formTitle = document.getElementById('formTitle');
+    let isLogin = true;
+
+    function toggleForm() {
+      isLogin = !isLogin;
+      formTitle.textContent = isLogin ? "Login to Glow & Scent" : "Sign up for Glow & Scent";
+      form.innerHTML = `
+        ${!isLogin ? '<input type="text" id="name" placeholder="Full Name" required />' : ''}
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        ${!isLogin ? '<input type="password" id="confirm" placeholder="Confirm Password" required />' : ''}
+        <button type="submit">${isLogin ? 'Login' : 'Sign Up'}</button>
+      `;
+      document.querySelector('.toggle-text').innerHTML =
+        isLogin
+          ? `Don’t have an account? <a onclick="toggleForm()">Sign up</a>`
+          : `Already have an account? <a onclick="toggleForm()">Login</a>`;
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (isLogin) {
+        auth.signInWithEmailAndPassword(email, password)
+          .then(() => alert("Logged in!"))
+          .catch(err => alert(err.message));
+      } else {
+        const confirm = document.getElementById('confirm').value;
+        if (password !== confirm) {
+          alert("Passwords do not match.");
+          return;
+        }
+        auth.createUserWithEmailAndPassword(email, password)
+          .then(() => alert("Account created!"))
+          .catch(err => alert(err.message));
+      }
+    });
+
+    function googleSignIn() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(() => alert("Google login success!"))
+        .catch(err => alert(err.message));
+    }
+
+    function facebookSignIn() {
+      const provider = new firebase.auth.FacebookAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(() => alert("Facebook login success!"))
+        .catch(err => alert(err.message));
+    }
+
+    function showPhoneInput() {
+      document.getElementById('phoneSheet').classList.add('active');
+      document.getElementById('backdrop').classList.add('active');
+
+      if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+          size: 'normal',
+          callback: function(response) {
+            console.log("reCAPTCHA solved");
+          }
+        });
+      }
+    }
+
+    function closeSheet() {
+      document.getElementById('phoneSheet').classList.remove('active');
+      document.getElementById('backdrop').classList.remove('active');
+    }
+
+    function sendOTP() {
+      const phoneNumber = document.getElementById('phoneNumber').value;
+      const appVerifier = window.recaptchaVerifier;
+      auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then(confirmationResult => {
+          window.confirmationResult = confirmationResult;
+          alert("OTP sent!");
+        })
+        .catch(error => alert("Error: " + error.message));
+    }
+
+    function verifyOTP() {
+      const code = document.getElementById('otp').value;
+      window.confirmationResult.confirm(code)
+        .then(result => {
+          alert("Phone login success!");
+          closeSheet();
+        })
+        .catch(error => alert("Invalid OTP"));
+    }
+  </script>
+</body>
+</html>

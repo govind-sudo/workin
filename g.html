@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Glow &amp; Scent | Auth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Open+Sans&display=swap" rel="stylesheet" />
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://unpkg.com/lucide-static@latest/font/lucide-static.css">
+  <style>
+    :root {
+      --primary  : #7b5e57;
+      --primary-2: #5e443e;
+      --accent   : #3b2f2f;
+      --glass    : rgba(255,255,255,0.28);
+      --error    : #e74c3c;
+      --success  : #2ecc71;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;height:100%}
+    body{display:flex;justify-content:center;align-items:center;font-family:'Open Sans',sans-serif;background:linear-gradient(135deg,#ffe3d3,#ffe6f0,#f4e8dc);overflow:hidden;}
+    .bg-glow{position:absolute;width:480px;height:480px;top:-140px;right:-140px;background:radial-gradient(circle,#ffdac1,#ffffff00);filter:blur(100px);opacity:.5;pointer-events:none}
+    .card{position:relative;width:90%;max-width:420px;padding:2.5rem;background:var(--glass);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(24px);border-radius:22px;box-shadow:0 18px 38px rgba(0,0,0,.18);animation:fade 1s ease-out forwards}
+    h2{margin:0 0 1.4rem;font-family:'Playfair Display',serif;text-align:center;color:var(--accent)}
+    form{display:flex;flex-direction:column;gap:.85rem}
+    input,button,select{font-size:1rem;padding:.85rem;border-radius:12px;border:none;width:100%}
+    input{background:rgba(255,255,255,.9)}
+    input:focus{outline:none;box-shadow:0 0 0 3px rgba(123,94,87,.3)}
+    .pwd-wrapper{position:relative}
+    .toggle-visibility{position:absolute;top:50%;right:14px;transform:translateY(-50%);background:none;border:none;cursor:pointer}
+    button[type="submit"]{margin-top:.4rem;background:var(--primary);color:#fff;font-weight:600;cursor:pointer;transition:background .25s ease,transform .2s ease}
+    button[type="submit"]:hover{background:var(--primary-2);transform:translateY(-1px)}
+    .remember{display:flex;align-items:center;gap:6px;font-size:.9rem;margin-top:.3rem;color:var(--accent)}
+    .divider{position:relative;text-align:center;color:#666;margin:1.6rem 0;font-size:.9rem}
+    .divider::before,.divider::after{content:"";position:absolute;top:50%;width:40%;height:1px;background:#bbb}
+    .divider::before{left:0}.divider::after{right:0}
+    .auth-buttons{display:flex;flex-direction:column;gap:.7rem}
+    .auth-btn{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border:1px solid #ccc;border-radius:8px;font-weight:500;color:#444;cursor:pointer;transition:background .2s ease,transform .2s ease}
+    .auth-btn:hover{background:#f5f5f5;transform:translateY(-1px)}
+    .auth-btn img{width:20px;height:20px}
+    .auth-btn span{flex:1;text-align:center}
+    .toggle-text{margin-top:1rem;text-align:center;font-size:.95rem;color:var(--accent)}
+    .toggle-text a{font-weight:700;text-decoration:underline;cursor:pointer}
+    .error-msg{display:none;font-size:.85rem;color:var(--error)}
+    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:1rem 1.2rem;border-radius:12px;color:#fff;font-weight:600;opacity:0;pointer-events:none;transition:opacity .3s ease,transform .3s ease}
+    .toast.show{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+    .toast.success{background:var(--success)}.toast.error{background:var(--error)}
+    .bottom-sheet{position:fixed;left:0;bottom:-100%;width:100%;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.18);padding:1.5rem;transition:bottom .4s ease-in-out;z-index:1000}
+    .bottom-sheet.active{bottom:0}
+    .sheet-content{display:flex;flex-direction:column;gap:.9rem}
+    .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:999}
+    .backdrop.active{display:block}
+    @keyframes fade{0%{opacity:0;transform:translateY(40px)}100%{opacity:1;transform:translateY(0)}}
+    @media(max-width:480px){.card{padding:1.6rem;border-radius:18px}}
+  </style>
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <main class="card" aria-live="polite">
+    <h2 id="formTitle">Login to Glow &amp; Scent</h2>
+    <form id="authForm" novalidate>
+      <div class="error-msg" id="formError"></div>
+      <input type="email" id="email" placeholder="Email" required aria-label="Email" />
+      <div class="pwd-wrapper">
+        <input type="password" id="password" placeholder="Password" required aria-label="Password" minlength="6" />
+        <button type="button" class="toggle-visibility" id="togglePwd" aria-label="Show password"><i class="lucide lucide-eye"></i></button>
+      </div>
+      <label class="remember"><input type="checkbox" id="remember">Remember me</label>
+      <button type="submit" id="submitBtn">Login</button>
+    </form>
+    <p class="divider">or</p>
+    <section class="auth-buttons">
+      <button class="auth-btn" id="googleBtn"><img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo"><span>Continue with Google</span></button>
+      <button class="auth-btn" id="facebookBtn"><img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" alt="Facebook logo"><span>Continue with Facebook</span></button>
+      <button class="auth-btn" id="phoneBtn"><img src="https://img.icons8.com/ios-filled/50/phone--v1.png" alt="Phone icon"><span>Continue with Mobile</span></button>
+    </section>
+    <p class="toggle-text" id="toggleText">Don’t have an account? <a id="toggleLink">Sign up</a></p>
+  </main>
+
+  <!-- Bottom sheet (phone auth) -->
+  <aside id="phoneSheet" class="bottom-sheet" role="dialog" aria-labelledby="sheetTitle">
+    <div class="sheet-content">
+      <h3 id="sheetTitle">Sign in with Mobile</h3>
+      <input type="tel" id="phoneNumber" placeholder="Enter mobile number" aria-label="Mobile number" required />
+      <div id="recaptcha-container"></div>
+      <button id="sendOtpBtn">Send OTP</button>
+      <input type="text" id="otp" placeholder="Enter OTP" aria-label="OTP" />
+      <button id="verifyOtpBtn">Verify OTP</button>
+    </div>
+  </aside>
+  <div id="backdrop" class="backdrop"></div>
+
+  <div id="toast" class="toast" role="alert"></div>
+
+  <script type="module">
+    import{initializeApp}from"https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import{getAuth,GoogleAuthProvider,FacebookAuthProvider,RecaptchaVerifier,signInWithPopup,signInWithPhoneNumber,createUserWithEmailAndPassword,signInWithEmailAndPassword,setPersistence,browserLocalPersistence,browserSessionPersistence}from"https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    /* ------------ CONFIG (replace with env) ----------- */
+    const firebaseConfig={apiKey:"AIzaSyAYlz1zWNhr1DflppMfzNPva0UFVso7Bpk",authDomain:"candle-d7f07.firebaseapp.com",projectId:"candle-d7f07",appId:"1:165415078791:web:c764eb95f3d2272c1ce122"};
+    const app=initializeApp(firebaseConfig);
+    const auth=getAuth(app);
+
+    /* ------------- ELEMENT REFERENCES --------------- */
+    const qs=id=>document.getElementById(id);
+    const form      =qs('authForm');
+    const formTitle =qs('formTitle');
+    const formError =qs('formError');
+    const toggleLink=qs('toggleLink');
+    const toggleText=qs('toggleText');
+    const submitBtn =qs('submitBtn');
+    const togglePwd =qs('togglePwd');
+    const toast     =qs('toast');
+    const googleBtn =qs('googleBtn');
+    const facebookBtn=qs('facebookBtn');
+    const phoneBtn  =qs('phoneBtn');
+    const phoneSheet=qs('phoneSheet');
+    const backdrop  =qs('backdrop');
+    const sendOtpBtn=qs('sendOtpBtn');
+    const verifyOtpBtn=qs('verifyOtpBtn');
+
+    let isLogin=true; let confirmationResult=null;
+
+    /* ---------------- TOAST --------------------- */
+    function showToast(msg,type="success"){toast.textContent=msg;toast.className=`toast show ${type}`;setTimeout(()=>toast.className="toast",3000);}
+
+    /* ---------- PASSWORD VISIBILITY ------------ */
+    togglePwd.addEventListener('click',()=>{
+      const pwd=qs('password');
+      const isVisible=pwd.type==='text';
+      pwd.type=isVisible?'password':'text';
+      togglePwd.innerHTML=`<i class="lucide lucide-${isVisible?'eye':'eye-off'}"></i>`;
+    });
+
+    /* ---------- PERSISTENCE HANDLING ----------- */
+    qs('remember').addEventListener('change',e=>{
+      setPersistence(auth,e.target.checked?browserLocalPersistence:browserSessionPersistence);
+    });
+
+    /* ---------- EMAIL/PWD FLOW ----------------- */
+    form.addEventListener('submit',async e=>{
+      e.preventDefault();formError.style.display='none';submitBtn.disabled=true;
+      const email=qs('email').value.trim();
+      const password=qs('password').value;
+      try{
+        isLogin?await signInWithEmailAndPassword(auth,email,password)
+                :await createUserWithEmailAndPassword(auth,email,password);
+        showToast(isLogin?'Logged in successfully':'Account created','success');
+      }catch(err){formError.textContent=err.message;formError.style.display='block';showToast('Authentication failed','error');}
+      submitBtn.disabled=false;
+    });
+
+    /* ---------- TOGGLE LOGIN/SIGNUP ------------ */
+    toggleLink.addEventListener('click',()=>{
+      isLogin=!isLogin;
+      formTitle.textContent=isLogin?'Login to Glow & Scent':'Sign up for Glow & Scent';
+      submitBtn.textContent=isLogin?'Login':'Sign Up';
+      toggleText.innerHTML=isLogin?'Don’t have an account? <a id="toggleLink">Sign up</a>'
+                                 :'Already have an account? <a id="toggleLink">Login</a>';
+      // Re‑bind new link
+      qs('toggleLink').addEventListener('click',toggleLink.onclick);
+    });
+
+    /* -------------- GOOGLE --------------------- */
+    googleBtn.addEventListener('click',()=>oauth(new GoogleAuthProvider()));
+    facebookBtn.addEventListener('click',()=>oauth(new FacebookAuthProvider()));
+    async function oauth(provider){try{await signInWithPopup(auth,provider);showToast('Login successful');}catch(err){showToast(err.message,'error')}}
+
+    /* -------------- PHONE AUTH ----------------- */
+    phoneBtn.addEventListener('click',()=>{openSheet();initRecaptcha()});
+    backdrop.addEventListener('click',closeSheet);
+    function openSheet(){phoneSheet.classList.add('active');backdrop.classList.add('active')}
+    function closeSheet(){phoneSheet.classList.remove('active');backdrop.classList.remove('active')}
+
+    function initRecaptcha(){if(window.recaptchaVerifier)return;window.recaptchaVerifier=new RecaptchaVerifier(auth,'recaptcha-container',{size:'normal'});}
+
+    sendOtpBtn.addEventListener('click',async()=>{
+      const phone=qs('phoneNumber').value.trim();
+      if(!phone)return showToast('Enter phone','error');
+      try{confirmationResult=await signInWithPhoneNumber(auth,phone,window.recaptchaVerifier);showToast('OTP sent');}
+      catch(err){showToast(err.message,'error')}
+    });
+
+    verifyOtpBtn.addEventListener('click',async()=>{
+      const code=qs('otp').value.trim();
+      if(!code||!confirmationResult)return showToast('Enter OTP','error');
+      try{await confirmationResult.confirm(code);showToast('Phone verified');closeSheet();}
+      catch(err){showToast('Invalid OTP','error')}
+    });
+
+import { sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+await sendEmailVerification(auth.currentUser);
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Glow & Scent | All Products</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Open+Sans&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #7b5e57;
+      --secondary: #fffaf5;
+      --accent: #3b2f2f;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: var(--secondary);
+      color: var(--accent);
+    }
+
+    header {
+      background: var(--primary);
+      padding: 1.5rem;
+      text-align: center;
+      color: white;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .products-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .product-card:hover img {
+      transform: scale(1.08);
+    }
+
+    .product-details {
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .product-details h3 {
+      margin: 0.5rem 0;
+      font-size: 1.2rem;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .price {
+      color: var(--primary);
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+
+    .description {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 1rem;
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    .add-to-cart {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.7rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+      text-align: center;
+    }
+
+    .add-to-cart:hover {
+      background: #5e443e;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      background: var(--accent);
+      color: white;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>All Candles</h1>
+    <p>Browse our complete handcrafted candle collection</p>
+  </header>
+
+  <div class="products-container">
+    <div class="product-card">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHH6sTLinu_1-sIcGo7ZxxxXYsJyNxAy7KsA&s" alt="Lavender Candle">
+      <div class="product-details">
+        <h3>Lavender Calm</h3>
+        <p class="price">₹499</p>
+        <p class="description">A soothing blend of lavender and vanilla. Great for relaxation.</p>
+        <button class="add-to-cart" onclick="addToCart('Lavender Calm', 499)">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="https://media-us.landmarkshops.in/cdn-cgi/image/h=750,w=750,q=85,fit=cover/homecentre/1000013707308-1000013707307_03-2100.jpg" alt="Citrus Candle">
+      <div class="product-details">
+        <h3>Citrus Sunrise</h3>
+        <p class="price">₹549</p>
+        <p class="description">A fresh and energetic citrus candle to start your day with joy.</p>
+        <button class="add-to-cart" onclick="addToCart('Citrus Sunrise', 549)">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="https://yankeecandle.imgix.net/facb0b62-21b0-3027-b1f4-fe5efef6f29e/facb0b62-21b0-3027-b1f4-fe5efef6f29e.jpg?fm=jpg" alt="Forest Candle">
+      <div class="product-details">
+        <h3>Forest Flame</h3>
+        <p class="price">₹599</p>
+        <p class="description">Woody tones with a crackling wood wick for a campfire feel.</p>
+        <button class="add-to-cart" onclick="addToCart('Forest Flame', 599)">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="https://m.media-amazon.com/images/I/81rAqfn1HoL._AC_SL1500_.jpg" alt="Rose Candle">
+      <div class="product-details">
+        <h3>Rose Bliss</h3>
+        <p class="price">₹699</p>
+        <p class="description">Romantic rose fragrance with a soft floral touch. Perfect gift.</p>
+        <button class="add-to-cart" onclick="addToCart('Rose Bliss', 699)">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="https://m.media-amazon.com/images/I/81XVRRkz8wL._AC_SL1500_.jpg" alt="Coffee Candle">
+      <div class="product-details">
+        <h3>Morning Brew</h3>
+        <p class="price">₹499</p>
+        <p class="description">Smells like freshly brewed coffee with a hint of caramel.</p>
+        <button class="add-to-cart" onclick="addToCart('Morning Brew', 499)">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="https://m.media-amazon.com/images/I/71gbyDNHhZL._AC_SL1500_.jpg" alt="Vanilla Candle">
+      <div class="product-details">
+        <h3>Vanilla Dream</h3>
+        <p class="price">₹599</p>
+        <p class="description">Sweet vanilla aroma with a creamy undertone. Cozy vibes.</p>
+        <button class="add-to-cart" onclick="addToCart('Vanilla Dream', 599)">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="https://m.media-amazon.com/images/I/71gbyDNHhZL._AC_SL1500_.jpg" alt="Vanilla Candle">
+      <div class="product-details">
+        <h3>Vanilla Dream</h3>
+        <p class="price">₹599</p>
+        <p class="description">Sweet vanilla aroma with a creamy undertone. Cozy vibes.</p>
+        <button class="add-to-cart" onclick="addToCart('Vanilla Dream', 599)">Add to Cart</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <img src="https://m.media-amazon.com/images/I/71gbyDNHhZL._AC_SL1500_.jpg" alt="Vanilla Candle">
+      <div class="product-details">
+        <h3>Vanilla Dream</h3>
+        <p class="price">₹599</p>
+        <p class="description">Sweet vanilla aroma with a creamy undertone. Cozy vibes.</p>
+        <button class="add-to-cart" onclick="addToCart('Vanilla Dream', 599)">Add to Cart</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <img src="https://m.media-amazon.com/images/I/71gbyDNHhZL._AC_SL1500_.jpg" alt="Vanilla Candle">
+      <div class="product-details">
+        <h3>Vanilla Dream</h3>
+        <p class="price">₹599</p>
+        <p class="description">Sweet vanilla aroma with a creamy undertone. Cozy vibes.</p>
+        <button class="add-to-cart" onclick="addToCart('Vanilla Dream', 599)">Add to Cart</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <img src="https://m.media-amazon.com/images/I/71gbyDNHhZL._AC_SL1500_.jpg" alt="Vanilla Candle">
+      <div class="product-details">
+        <h3>Vanilla Dream</h3>
+        <p class="price">₹599</p>
+        <p class="description">Sweet vanilla aroma with a creamy undertone. Cozy vibes.</p>
+        <button class="add-to-cart" onclick="addToCart('Vanilla Dream', 599)">Add to Cart</button>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; 2025 Glow & Scent. All rights reserved.
+  </footer>
+
+  <script>
+    function addToCart(product, price) {
+      alert(product + " added to cart! (Price: ₹" + price + ")");
+    }
+  </script>
+
+  <script>
+  function addToCart(product, price, image) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // check if product already exists → increase qty
+    let existing = cart.find(item => item.name === product);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({ name: product, price: price, image: image, qty: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    alert(product + " added to cart!");
+  }
+
+  function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    localStorage.setItem("cartCount", totalQty);
+  }
+
+  // Run on page load
+  document.addEventListener("DOMContentLoaded", updateCartCount);
+</script>
+
+<!-- Example call -->
+<button class="add-to-cart" 
+ onclick="addToCart('Lavender Calm', 499, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHH6sTLinu_1-sIcGo7ZxxxXYsJyNxAy7KsA&s')">
+  Add to Cart
+</button>
+
+<script>
+  function addToCart(product, price, image = null, btn = null) {
+    if (!image && btn) {
+      // find product card image
+      const card = btn.closest(".product-card");
+      image = card.querySelector("img").src;
+    }
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    let existing = cart.find(item => item.name === product);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({ name: product, price: price, image: image, qty: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    alert(product + " added to cart!");
+  }
+
+  function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    localStorage.setItem("cartCount", totalQty);
+  }
+
+  document.addEventListener("DOMContentLoaded", updateCartCount);
+</script>
+
+
+
+
+</body>
+</html>
